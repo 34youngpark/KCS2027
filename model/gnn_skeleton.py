@@ -90,35 +90,58 @@ class HeavyHexGNN(nn.Module):
         self.register_buffer("static_feats",
                              torch.from_numpy(gb.static_feats))
         # ------------------------------------------------------------------
-        # TODO 1/3 — network construction
-        # * self.encoder: Linear(IN_FEATS, hidden_dim) for the per-node
-        #   input [detector bit, 6 static features]
-        # * message-passing layers (num_layers rounds, pure torch — use
-        #   `self.adj @ h` for neighbor aggregation; see the module
-        #   docstring for a layer recipe)
-        # * self.shared: pooled node states -> Linear -> ReLU ->
-        #   Dropout(dropout) (mirror the CNN's shared FC block)
+        # network construction
         # ------------------------------------------------------------------
-        raise NotImplementedError("TODO: define the GNN layers")
+        self.num_nodes = gb.num_nodes
+        self.encoder = nn.Linear(IN_FEATS, hidden_dim)
+        # message passing: h' = h + ReLU(LN(W_self h + adj @ (W_neigh h)))
+        self.mp_layers = nn.ModuleList(
+            [_MPLayer(hidden_dim) for _ in range(num_layers)])
+        # readout: concat(mean-pool, max-pool, flattened node states).
+        # The graph is static and tiny (48 nodes), so keeping the
+        # per-node states (position-aware, like the CNN's flatten) on top
+        # of the permutation-invariant pools costs little and lets the
+        # heads see *which* detector fired, which the pools alone blur.
+        self.shared = nn.Sequential(
+            nn.Linear(2 * hidden_dim + self.num_nodes * hidden_dim, fc_dim),
+            nn.ReLU(inplace=True),
+            nn.Dropout(dropout))
 
         # ------------------------------------------------------------------
-        # TODO 2/3 — the two heads
-        # self.head_qubit  : Linear(fc_dim, num_qubits)  (17 outputs, ECR)
-        # self.head_logical: Linear(fc_dim, 1)           (1 output, LER)
+        # the two heads
         # ------------------------------------------------------------------
+        self.head_qubit = nn.Linear(fc_dim, num_qubits)    # per-qubit X (ECR)
+        self.head_logical = nn.Linear(fc_dim, 1)           # logical Z (LER)
 
     def forward(self, x):
         # provided: detector bits + static features per node --------------
         det = self.graph.node_values(x).float()          # (B, N)
         stat = self.static_feats.unsqueeze(0).expand(x.shape[0], -1, -1)
         h = torch.cat([det.unsqueeze(-1), stat], dim=-1)  # (B, N, 7)
-        # ------------------------------------------------------------------
-        # TODO 1/3 (cont.) — run h through the encoder and the
-        # message-passing rounds, pool over the node dimension, apply
-        # self.shared, then return the two head outputs as a tuple:
-        # (qubit_logits, logical_logits)
-        # ------------------------------------------------------------------
-        raise NotImplementedError("TODO: implement forward")
+        h = F.relu(self.encoder(h))                        # (B, N, H)
+        for layer in self.mp_layers:
+            h = layer(h, self.adj)
+        pooled = torch.cat([h.mean(dim=1), h.amax(dim=1),
+                            h.flatten(1)], dim=-1)
+        z = self.shared(pooled)
+        return self.head_qubit(z), self.head_logical(z)
+
+
+class _MPLayer(nn.Module):
+    """One dense message-passing round on the normalized adjacency:
+    h' = h + ReLU(LayerNorm(W_self h + adj @ (W_neigh h)))."""
+
+    def __init__(self, hidden_dim):
+        super().__init__()
+        self.w_self = nn.Linear(hidden_dim, hidden_dim)
+        self.w_neigh = nn.Linear(hidden_dim, hidden_dim, bias=False)
+        self.norm = nn.LayerNorm(hidden_dim)
+
+    def forward(self, h, adj):
+        # adj: (N, N) normalized; h: (B, N, H). Batched aggregation is a
+        # plain matmul since adj broadcasts over the batch dimension.
+        agg = torch.matmul(adj, self.w_neigh(h))
+        return h + F.relu(self.norm(self.w_self(h) + agg))
 
 
 def compute_loss(qubit_logits, logical_logits, y_qubit, y_logical,
@@ -130,12 +153,10 @@ def compute_loss(qubit_logits, logical_logits, y_qubit, y_logical,
     per-qubit BCE's pos_weight to counter class imbalance
     (e.g. pos_weight=(1-p)/p).
     """
-    # ----------------------------------------------------------------------
-    # TODO 3/3 — loss computation
-    # * logical head: F.binary_cross_entropy_with_logits on the squeezed
-    #   (B,) logits vs y_logical.float()  -> MAIN loss
-    # * per-qubit head: F.binary_cross_entropy_with_logits on (B,17) vs
-    #   y_qubit.float(), pos_weight=qubit_pos_weight  -> AUXILIARY loss
-    # * total = main + aux_weight * auxiliary
-    # ----------------------------------------------------------------------
-    raise NotImplementedError("TODO: implement the two-head loss")
+    # cast logits to fp32 so the BCE is numerically safe under AMP autocast
+    loss_logical = F.binary_cross_entropy_with_logits(
+        logical_logits.float().reshape(-1), y_logical.float().reshape(-1))
+    loss_qubit = F.binary_cross_entropy_with_logits(
+        qubit_logits.float(), y_qubit.float(), pos_weight=qubit_pos_weight)
+    total = loss_logical + aux_weight * loss_qubit
+    return total, loss_logical, loss_qubit

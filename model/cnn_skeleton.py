@@ -77,31 +77,36 @@ class HeavyHexCNN(nn.Module):
         from model import CODE_SPECS
         grid_h, grid_w = CODE_SPECS[code]["grid"]
         # ------------------------------------------------------------------
-        # TODO 1/3 — feature extractor
-        # Build self.features: a stack of Conv2d(3x3, padding=1) blocks
-        # (BatchNorm2d + ReLU after each conv). The input tensor has
-        # `in_channels + 1` channels (the +1 is the final-Z detector
-        # channel added by prepare_features); keep the grid_h x grid_w
-        # spatial size (no pooling).
-        # Also build self.shared: Flatten -> Linear(conv_channels*grid_h*
-        # grid_w, fc_dim) -> ReLU -> Dropout(dropout).
+        # feature extractor: 4 x [Conv3x3(pad=1) -> BN -> ReLU], no pooling
+        # (the grid is tiny; 4 layers give every cell a receptive field
+        # covering the whole plane). Input has in_channels + 1 planes: the
+        # +1 is the final-Z detector channel added by prepare_features.
         # ------------------------------------------------------------------
-        raise NotImplementedError("TODO: define the conv blocks")
+        self.grid = (grid_h, grid_w)
+        cin = in_channels + 1
+        layers = []
+        for _ in range(4):
+            layers += [nn.Conv2d(cin, conv_channels, 3, padding=1, bias=False),
+                       nn.BatchNorm2d(conv_channels),
+                       nn.ReLU(inplace=True)]
+            cin = conv_channels
+        self.features = nn.Sequential(*layers)
+        self.shared = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(conv_channels * grid_h * grid_w, fc_dim),
+            nn.ReLU(inplace=True),
+            nn.Dropout(dropout))
 
         # ------------------------------------------------------------------
-        # TODO 2/3 — the two heads
-        # self.head_qubit  : Linear(fc_dim, num_qubits)  (17 outputs, ECR)
-        # self.head_logical: Linear(fc_dim, 1)           (1 output, LER)
+        # the two heads
         # ------------------------------------------------------------------
+        self.head_qubit = nn.Linear(fc_dim, num_qubits)    # per-qubit X (ECR)
+        self.head_logical = nn.Linear(fc_dim, 1)           # logical Z (LER)
 
     def forward(self, x):
         x = x.float()
-        # ------------------------------------------------------------------
-        # TODO 1/3 (cont.) — feature extraction part of forward:
-        # run x through self.features and self.shared, then return the two
-        # head outputs as a tuple: (qubit_logits, logical_logits)
-        # ------------------------------------------------------------------
-        raise NotImplementedError("TODO: implement forward")
+        h = self.shared(self.features(x))
+        return self.head_qubit(h), self.head_logical(h)
 
 
 def compute_loss(qubit_logits, logical_logits, y_qubit, y_logical,
@@ -113,12 +118,10 @@ def compute_loss(qubit_logits, logical_logits, y_qubit, y_logical,
     per-qubit BCE's pos_weight to counter class imbalance
     (e.g. pos_weight=(1-p)/p).
     """
-    # ----------------------------------------------------------------------
-    # TODO 3/3 — loss computation
-    # * logical head: F.binary_cross_entropy_with_logits on the squeezed
-    #   (B,) logits vs y_logical.float()  -> MAIN loss
-    # * per-qubit head: F.binary_cross_entropy_with_logits on (B,17) vs
-    #   y_qubit.float(), pos_weight=qubit_pos_weight  -> AUXILIARY loss
-    # * total = main + aux_weight * auxiliary
-    # ----------------------------------------------------------------------
-    raise NotImplementedError("TODO: implement the two-head loss")
+    # cast logits to fp32 so the BCE is numerically safe under AMP autocast
+    loss_logical = F.binary_cross_entropy_with_logits(
+        logical_logits.float().reshape(-1), y_logical.float().reshape(-1))
+    loss_qubit = F.binary_cross_entropy_with_logits(
+        qubit_logits.float(), y_qubit.float(), pos_weight=qubit_pos_weight)
+    total = loss_logical + aux_weight * loss_qubit
+    return total, loss_logical, loss_qubit
