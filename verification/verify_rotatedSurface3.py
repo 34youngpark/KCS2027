@@ -26,8 +26,8 @@ proceed until this script prints ALL PASS.
           hook-injected circuit is bit-identical to the circuit with the
           predicted residual data Paulis injected at the corresponding
           layers
-  [F] ibm_miami embedding check (informational): if a fetched
-      coupling_ibm_miami.json exists at the repo root, the registered
+  [F] ibm_chicago embedding check (informational): if a fetched
+      coupling_ibm_chicago.json exists at the repo root, the registered
       45-degree embedding must fit it (every stabilizer CX
       device-adjacent). Skipped when the file is absent (offline).
   [G] Hardware-shaped rotatedSurface3 Stim circuit (rotatedSurface3_qpu_stim, the surface
@@ -279,16 +279,16 @@ def main():
               f"detstream={'==' if stream_ok else '!='}abstract "
               f"{'PASS' if good else 'FAIL'}")
 
-    # [F] ibm_miami embedding (informational; needs a fetched coupling map)
-    coupling = _ROOT / "coupling_ibm_miami.json"
+    # [F] ibm_chicago embedding (informational; needs a fetched coupling map)
+    coupling = _ROOT / "coupling_ibm_chicago.json"
     if coupling.exists():
         missing = validate_backend_surface(coupling, raise_on_fail=False)
         f_ok = not missing
         ok &= f_ok
-        print(f"[F] ibm_miami 45-degree embedding fits coupling map: "
+        print(f"[F] ibm_chicago 45-degree embedding fits coupling map: "
               f"{'PASS' if f_ok else 'FAIL ' + str(missing[:5])}")
     else:
-        print("[F] ibm_miami embedding: SKIP (no coupling_ibm_miami.json — "
+        print("[F] ibm_chicago embedding: SKIP (no coupling_ibm_chicago.json — "
               "run circuits/heavyhex/fetch_coupling.py first)")
 
     print(f"\nOVERALL: {'ALL PASS' if ok else 'FAILURES PRESENT'}")

@@ -200,7 +200,7 @@ class RotatedSurface3Hardware:
 # row-major numbering q = row*10 + col
 MIAMI_ROWS, MIAMI_COLS = 12, 10
 # top-left device (row, col) of the 5x5 patch block per backend
-EMBED_OFFSETS = {"ibm_miami": (4, 2)}
+EMBED_OFFSETS = {"ibm_miami": (4, 2), "ibm_chicago": (4, 2)}
 
 
 def embedding_for_surface(backend_name):
