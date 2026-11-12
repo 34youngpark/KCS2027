@@ -62,14 +62,14 @@
     }
   },
   "pipeline": {
-    "conda_env": "HHC",
+    "conda_env": "KCS2",
     "codes": [
       "heavyhex",
       "surface"
     ],
     "backends": {
       "heavyhex": "ibm_pittsburgh",
-      "surface": "ibm_miami"
+      "surface": "ibm_chicago"
     },
     "qpu_pubs": 5,
     "profile_runs": 5,

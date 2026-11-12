@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=qec-pipeline
-#SBATCH --partition=main
+#SBATCH --partition=all
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=32G
