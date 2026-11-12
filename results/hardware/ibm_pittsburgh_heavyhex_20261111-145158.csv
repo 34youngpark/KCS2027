@@ -1,0 +1,33 @@
+decoder,ler,ler_std_over_pubs,parity_LER (diagnostic),LER/MWPM ratio,shots,cycles,best_epoch,total_epochs,backend,timestamp,job_id
+raw (no decoding),0.275056,0.001663,N/A,N/A,250000,3,,,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+MWPM,0.263372,0.001342,N/A,N/A,250000,3,,,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.005_dp0.001_mf0.01_rf0.01_gd0.008.pt),0.212176,0.001594,0.224008,0.805613,250000,3,4,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.005_dp0.005_mf0.02_rf0.02_gd0.015.pt),0.210960,0.002008,0.220260,0.800996,250000,3,3,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.005_dp0.01_mf0.05_rf0.05_gd0.01.pt),0.213172,0.001246,0.221504,0.809395,250000,3,4,5,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.005_dp0.05_mf0.1_rf0.1_gd0.05.pt),0.225772,0.001318,0.237464,0.857236,250000,3,4,6,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.005_dp0.1_mf0.5_rf0.5_gd0.1.pt),0.724944,0.001663,0.275056,2.752548,250000,3,1,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.01_dp0.001_mf0.01_rf0.01_gd0.008.pt),0.211824,0.002399,0.220424,0.804277,250000,3,3,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.01_dp0.005_mf0.02_rf0.02_gd0.015.pt),0.210504,0.002140,0.219324,0.799265,250000,3,4,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.01_dp0.01_mf0.05_rf0.05_gd0.01.pt),0.212520,0.001027,0.220176,0.806919,250000,3,5,5,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.01_dp0.05_mf0.1_rf0.1_gd0.05.pt),0.228148,0.001276,0.238792,0.866258,250000,3,2,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.01_dp0.1_mf0.5_rf0.5_gd0.1.pt),0.724944,0.001663,0.724580,2.752548,250000,3,3,6,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.05_dp0.001_mf0.01_rf0.01_gd0.008.pt),0.219404,0.002063,0.229560,0.833057,250000,3,4,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.05_dp0.005_mf0.02_rf0.02_gd0.015.pt),0.213932,0.002057,0.227184,0.812281,250000,3,5,5,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.05_dp0.01_mf0.05_rf0.05_gd0.01.pt),0.214536,0.001118,0.222584,0.814574,250000,3,5,5,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.05_dp0.05_mf0.1_rf0.1_gd0.05.pt),0.236064,0.000454,0.238324,0.896314,250000,3,4,7,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+CNN (CNN_heavyhex_d3_c3_p0.05_dp0.1_mf0.5_rf0.5_gd0.1.pt),0.275056,0.001663,0.275056,1.044363,250000,3,3,6,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.005_dp0.001_mf0.01_rf0.01_gd0.008.pt),0.216360,0.002081,0.228852,0.821500,250000,3,5,5,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.005_dp0.005_mf0.02_rf0.02_gd0.015.pt),0.213256,0.001591,0.222132,0.809714,250000,3,9,9,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.005_dp0.01_mf0.05_rf0.05_gd0.01.pt),0.214672,0.000902,0.223628,0.815090,250000,3,8,8,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.005_dp0.05_mf0.1_rf0.1_gd0.05.pt),0.275056,0.001663,0.275056,1.044363,250000,3,1,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.005_dp0.1_mf0.5_rf0.5_gd0.1.pt),0.724944,0.001663,0.275056,2.752548,250000,3,1,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.01_dp0.001_mf0.01_rf0.01_gd0.008.pt),0.215808,0.001516,0.224048,0.819404,250000,3,5,5,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.01_dp0.005_mf0.02_rf0.02_gd0.015.pt),0.212992,0.001141,0.223836,0.808712,250000,3,7,7,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.01_dp0.01_mf0.05_rf0.05_gd0.01.pt),0.213052,0.001243,0.229196,0.808939,250000,3,6,6,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.01_dp0.05_mf0.1_rf0.1_gd0.05.pt),0.275056,0.001663,0.275056,1.044363,250000,3,1,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.01_dp0.1_mf0.5_rf0.5_gd0.1.pt),0.724944,0.001663,0.275056,2.752548,250000,3,2,5,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.05_dp0.001_mf0.01_rf0.01_gd0.008.pt),0.220784,0.001836,0.227704,0.838297,250000,3,6,6,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.05_dp0.005_mf0.02_rf0.02_gd0.015.pt),0.218484,0.001040,0.254556,0.829564,250000,3,6,7,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.05_dp0.01_mf0.05_rf0.05_gd0.01.pt),0.216948,0.001337,0.223252,0.823732,250000,3,6,7,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.05_dp0.05_mf0.1_rf0.1_gd0.05.pt),0.275056,0.001663,0.275056,1.044363,250000,3,1,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
+GNN (GNN_heavyhex_d3_c3_p0.05_dp0.1_mf0.5_rf0.5_gd0.1.pt),0.275056,0.001663,0.724944,1.044363,250000,3,1,4,ibm_pittsburgh,2026-11-11T14:51:58,dbq04vdt7fqc738a4a50
